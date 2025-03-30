@@ -1,27 +1,55 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchContacts, addContactAPI, removeContactAPI } from '../api';
+import { fetchContacts, addContact, removeContact, updateContact } from '../api'; 
 
 export const fetchContactsAsync = createAsyncThunk(
   'contacts/fetchContacts',
-  async () => {
-    const response = await fetchContacts();
-    return response;
+  async (token, { rejectWithValue }) => {
+    try {
+      return await fetchContacts(token);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
+
 export const addContactAsync = createAsyncThunk(
   'contacts/addContact',
-  async contact => {
-    const response = await addContactAPI(contact);
-    return response;
+  async (contact, { rejectWithValue, getState }) => {
+    const token = getState().auth.token;
+    try {
+      const data = await addContact(contact, token);
+      return data; 
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
 export const removeContactAsync = createAsyncThunk(
   'contacts/removeContact',
-  async id => {
-    const response = await removeContactAPI(id);
-    return response;
+  async (contactId, { rejectWithValue, getState }) => {
+    const token = getState().auth.token;
+    try {
+      await removeContact(contactId, token);
+      return contactId;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
+export const updateContactAsync = createAsyncThunk(
+  'contacts/updateContact',
+  async ({ contactId, updatedContact }, { rejectWithValue, getState }) => {
+    const token = getState().auth.token;  
+    try {
+      const data = await updateContact(contactId, updatedContact, token);  
+      return data;  
+    } catch (error) {
+      return rejectWithValue(error.response.data);  
+    }
   }
 );
 
@@ -33,9 +61,9 @@ const contactsSlice = createSlice({
     error: null,
   },
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchContactsAsync.pending, state => {
+      .addCase(fetchContactsAsync.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchContactsAsync.fulfilled, (state, action) => {
@@ -44,15 +72,19 @@ const contactsSlice = createSlice({
       })
       .addCase(fetchContactsAsync.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       .addCase(addContactAsync.fulfilled, (state, action) => {
-        state.items.push(action.payload);
+        state.items.push(action.payload);  
       })
       .addCase(removeContactAsync.fulfilled, (state, action) => {
-        state.items = state.items.filter(
-          contact => contact.id !== action.payload
-        );
+        state.items = state.items.filter(contact => contact.id !== action.payload);  
+      })
+      .addCase(updateContactAsync.fulfilled, (state, action) => {
+        const index = state.items.findIndex(contact => contact.id === action.payload.id);
+        if (index !== -1) {
+          state.items[index] = action.payload;  
+        }
       });
   },
 });

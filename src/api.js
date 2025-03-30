@@ -1,34 +1,99 @@
 import axios from 'axios';
 
-const API_URL = 'https://67e051137635238f9aad3350.mockapi.io/contacts';
 
-export const fetchContacts = async () => {
+const API_URL = 'https://connections-api.goit.global';
+
+
+export const loginUser = async (email, password) => {
   try {
-    const response = await axios.get(API_URL);
-    return response.data;
+    const response = await axios.post(`${API_URL}/users/login`, { email, password });
+    return response.data;  
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error; 
+  }
+};
+
+
+export const registerUser = async (email, password) => {
+  try {
+    const response = await axios.post(`${API_URL}/users/signup`, { email, password });
+    return response.data;  
+  } catch (error) {
+    console.error('Error registering:', error);
+    throw error;
+  }
+};
+
+
+export const fetchCurrentUser = async (token) => {
+  try {
+    const response = await axios.get(`${API_URL}/users/current`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;  
+  } catch (error) {
+    console.error('Error fetching current user:', error);
+    throw error;
+  }
+};
+
+
+export const fetchContacts = async (token) => {
+  try {
+    const response = await axios.get(`${API_URL}/contacts`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;  
   } catch (error) {
     console.error('Error fetching contacts:', error);
     throw error;
   }
 };
 
-export const addContactAPI = async contact => {
+export const addContact = async (contact, token) => {
   try {
-    const { name, number } = contact;
-    const response = await axios.post(API_URL, { name, phone: number });
-    return response.data;
+    const response = await axios.post(`${API_URL}/contacts`, contact, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;  
   } catch (error) {
     console.error('Error adding contact:', error);
     throw error;
   }
 };
 
-export const removeContactAPI = async id => {
+
+export const removeContact = async (contactId, token) => {
   try {
-    await axios.delete(`${API_URL}/${id}`);
-    return id;
+    const response = await axios.delete(`${API_URL}/contacts/${contactId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;  
   } catch (error) {
     console.error('Error removing contact:', error);
+    throw error;
+  }
+};
+
+export const updateContact = async (contactId, updatedContact, token) => {
+  try {
+    const response = await axios.patch(`${API_URL}/contacts/${contactId}`, updatedContact, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;  
+  } catch (error) {
+    console.error('Error updating contact:', error);
     throw error;
   }
 };
