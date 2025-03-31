@@ -15,15 +15,27 @@ export const loginUser = async (email, password) => {
 };
 
 
-export const registerUser = async (email, password) => {
+export const registerUser = async (name, email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/users/signup`, { email, password });
-    return response.data;  
+    console.log("Dane wysyłane do API:", { name, email, password });
+
+    const response = await axios.post('https://connections-api.goit.global/users/signup', {
+      name,
+      email,
+      password,
+    });
+
+    console.log("Odpowiedź z API:", response.data);
+    return response.data;
   } catch (error) {
-    console.error('Error registering:', error);
+    console.error("Błąd podczas rejestracji użytkownika:", error.response?.data || error.message);
     throw error;
   }
 };
+
+
+
+
 
 
 export const fetchCurrentUser = async (token) => {

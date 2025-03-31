@@ -18,16 +18,19 @@ export const loginUserAsync = createAsyncThunk(
 export const registerUserAsync = createAsyncThunk(
   'auth/registerUser',
   async (userCredentials, { rejectWithValue }) => {
-    const { email, password } = userCredentials;
-
     try {
-      const data = await registerUser(email, password); 
-      return data;  
+      const data = await registerUser(userCredentials.name, userCredentials.email, userCredentials.password);
+      return data;
     } catch (error) {
-      return rejectWithValue(error.response.data); 
+      if (error.response?.data?.code === 11000) {
+        return rejectWithValue({ message: 'Ten e-mail jest już zajęty. Wybierz inny.' });
+      }
+      return rejectWithValue(error.response?.data || { message: 'Wystąpił nieoczekiwany błąd.' });
     }
   }
 );
+
+
 
 export const fetchCurrentUserAsync = createAsyncThunk(
   'auth/fetchCurrentUser',
@@ -99,4 +102,3 @@ const authSlice = createSlice({
 export const { logoutUser } = authSlice.actions;
 
 export default authSlice.reducer;
-

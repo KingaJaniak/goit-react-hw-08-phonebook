@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { loginUserAsync } from '../redux/authSlice';  // Zmieniony import
+import { loginUserAsync } from '../redux/authSlice'; 
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -8,7 +8,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    dispatch(loginUserAsync({ email, password }));  // Wywołanie loginUserAsync
+    dispatch(loginUserAsync({ email, password }));
   };
 
   return (

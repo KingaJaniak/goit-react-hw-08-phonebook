@@ -9,15 +9,15 @@ const Navigation = () => {
   return (
     <nav>
       <NavLink to="/">Home</NavLink>
-      {!isAuthenticated ? (
-        <>
-          <NavLink to="/register">Register</NavLink>
-          <NavLink to="/login">Login</NavLink>
-        </>
-      ) : (
+      {isAuthenticated ? (
         <>
           <NavLink to="/contacts">Contacts</NavLink>
           <UserMenu />
+        </>
+      ) : (
+        <>
+          <NavLink to="/register">Register</NavLink>
+          <NavLink to="/login">Login</NavLink>
         </>
       )}
     </nav>
