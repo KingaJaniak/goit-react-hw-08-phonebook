@@ -30,8 +30,6 @@ export const registerUserAsync = createAsyncThunk(
   }
 );
 
-
-
 export const fetchCurrentUserAsync = createAsyncThunk(
   'auth/fetchCurrentUser',
   async (token, { rejectWithValue }) => {
@@ -44,12 +42,12 @@ export const fetchCurrentUserAsync = createAsyncThunk(
   }
 );
 
-
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
     token: null,
+    isAuthenticated: false,
     error: null,
     status: 'idle', 
   },
@@ -57,6 +55,7 @@ const authSlice = createSlice({
     logoutUser(state) {
       state.user = null;
       state.token = null;
+      state.isAuthenticated = false; 
     },
   },
   extraReducers: (builder) => {
@@ -68,10 +67,12 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isAuthenticated = true; 
       })
       .addCase(loginUserAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+        state.isAuthenticated = false;
       })
       .addCase(registerUserAsync.pending, (state) => {
         state.status = 'loading';
@@ -80,10 +81,12 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isAuthenticated = true;
       })
       .addCase(registerUserAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+        state.isAuthenticated = false;
       })
       .addCase(fetchCurrentUserAsync.pending, (state) => {
         state.status = 'loading';
@@ -91,10 +94,12 @@ const authSlice = createSlice({
       .addCase(fetchCurrentUserAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(fetchCurrentUserAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+        state.isAuthenticated = false;
       });
   },
 });

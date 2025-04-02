@@ -18,7 +18,7 @@ const RegisterPage = () => {
     setErrorMessage('');
 
     if (!name || !email || !password) {
-      setErrorMessage('❌ Proszę wypełnić wszystkie pola!');
+      setErrorMessage('❌ Please complete all fields!');
       return;
     }
 

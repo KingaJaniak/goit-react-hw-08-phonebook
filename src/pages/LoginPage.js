@@ -13,11 +13,12 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const result = await dispatch(loginUserAsync({ email, password }));
-
+  
     if (loginUserAsync.fulfilled.match(result)) {
       navigate('/contacts');
     }
   };
+  
 
   return (
     <div>

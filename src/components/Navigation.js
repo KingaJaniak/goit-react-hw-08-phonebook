@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import UserMenu from './UserMenu';
 
 const Navigation = () => {
@@ -8,16 +8,25 @@ const Navigation = () => {
 
   return (
     <nav>
-      <NavLink to="/">Home</NavLink>
+      <NavLink to="/" style={{ padding: '10px', marginRight: '20px' }}>
+        Home
+      </NavLink>
+
       {isAuthenticated ? (
         <>
-          <NavLink to="/contacts">Contacts</NavLink>
+          <NavLink to="/contacts" style={{ padding: '10px', marginRight: '20px' }}>
+            Contacts
+          </NavLink>
           <UserMenu />
         </>
       ) : (
         <>
-          <NavLink to="/register">Register</NavLink>
-          <NavLink to="/login">Login</NavLink>
+          <NavLink to="/register" style={{ padding: '10px', marginRight: '20px' }}>
+            Register
+          </NavLink>
+          <NavLink to="/login" style={{ padding: '10px', marginRight: '20px' }}>
+            Login
+          </NavLink>
         </>
       )}
     </nav>
