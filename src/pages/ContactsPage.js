@@ -22,9 +22,6 @@ const ContactsPage = () => {
   console.log('Status:', status);
   console.log('Error:', error);
 
-  const handleLogout = () => {
-    // Logout logic
-  };
 
   return (
     <div>
@@ -32,7 +29,6 @@ const ContactsPage = () => {
       {error && <p style={{ color: 'red' }}>❌ {error}</p>}
 
       <h2>Hello, {user?.name}! 🎉</h2>
-      <button onClick={handleLogout}>Logout</button>
 
       <h1>Your Contacts</h1>
       <ContactForm />

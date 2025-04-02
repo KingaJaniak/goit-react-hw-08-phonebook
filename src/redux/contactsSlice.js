@@ -19,8 +19,10 @@ export const addContactAsync = createAsyncThunk(
     const token = getState().auth.token;
     try {
       const data = await addContact(contact, token);
+      console.log('Contact added:', data); 
       return data; 
     } catch (error) {
+      console.error('Error adding contact:', error);
       return rejectWithValue(error.response.data);
     }
   }
@@ -74,6 +76,7 @@ const contactsSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
+    
       .addCase(addContactAsync.fulfilled, (state, action) => {
         state.items.push(action.payload);  
       })
