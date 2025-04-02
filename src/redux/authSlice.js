@@ -29,15 +29,19 @@ export const registerUserAsync = createAsyncThunk(
 
 export const logoutUserAsync = createAsyncThunk(
   'auth/logoutUser',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch, getState }) => {
+    const token = getState().auth.token;  
     try {
-      const response = await axios.post(`${API_URL}/users/logout`);
-      return response.data;  
+      await axios.post(`${API_URL}/users/logout`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch(clearUser());
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
+
 
 export const fetchCurrentUser = createAsyncThunk(
   'auth/fetchCurrentUser',
