@@ -10,7 +10,7 @@ const RegisterPage = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { status, error } = useSelector((state) => state.auth);
+  const { status} = useSelector((state) => state.auth);
 
   const handleRegister = async (e) => {
     e.preventDefault();
