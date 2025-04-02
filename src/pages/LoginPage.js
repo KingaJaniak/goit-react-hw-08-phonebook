@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
+
 const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -42,15 +43,15 @@ const LoginPage = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          placeholder="Email" className="input-field"
         />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Password" className="input-field"
         />
-        <button type="submit">Login</button>
+        <button type="submit" className="submit-button">Login</button>
       </form>
 
       {status === 'loading' && <p>🔄 Logging in...</p>}

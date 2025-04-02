@@ -18,7 +18,7 @@ const ContactForm = () => {
 
   return (
     <div>
-      <h2>Add Contact</h2>
+      <h2>Add Contact ➕</h2>
       <form onSubmit={handleSubmit} className="form-container">
         <input type="text" name="name" placeholder="Name" className="input-field" required />
         <input type="text" name="number" placeholder="Phone number" className="input-field" required />

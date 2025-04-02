@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { registerUserAsync } from '../redux/authSlice';
 import { useAuth } from '../hooks/useAuth'; 
 
+
 const RegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -53,21 +54,21 @@ const RegisterPage = () => {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
+          placeholder="Name" className="input-field"
         />
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          placeholder="Email" className="input-field"
         />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Password" className="input-field"
         />
-        <button type="submit">Register</button>
+        <button type="submit" className="submit-button">Register</button>
       </form>
 
       {status === 'loading' && <p>🔄 Registering...</p>}

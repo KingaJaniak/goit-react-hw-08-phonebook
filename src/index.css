@@ -97,7 +97,24 @@ code {
 .remove-button:hover {
   background-color: #e53935;
 }
-
+.nav-button{
+  background-color: #6298ef;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin:10px;
+}
+.logout-button{
+  background-color: #465e84;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin:10px; 
+}
 .filter-input {
   padding: 8px;
   font-size: 14px;
@@ -125,4 +142,9 @@ code {
 .form-container{
   padding: 10px;
   margin: 10px;
+}
+
+.title-wrapper{
+  display:flex;
+  justify-content: center;
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setFilter } from '../redux/contactsSlice'; 
 
+
 const Filter = () => {
   const [query, setQuery] = useState('');
   const dispatch = useDispatch();

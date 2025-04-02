@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchContactsAsync, removeContactAsync } from '../redux/contactsSlice';
 
+
 const ContactList = () => {
   const dispatch = useDispatch();
   const { items, status, error, filter } = useSelector(state => state.contacts); 
@@ -32,7 +33,7 @@ const ContactList = () => {
 
   return (
     <div>
-      <h1>Contact List</h1>
+      <h2>Contact List 📞</h2>
       <ul>
         {filteredContacts.length > 0 ? (
           filteredContacts.map(contact => (

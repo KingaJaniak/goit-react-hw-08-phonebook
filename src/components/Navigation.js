@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logoutUserAsync } from '../redux/authSlice';  
 
 
+
 const Navigation = () => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
   const dispatch = useDispatch();
@@ -24,25 +25,25 @@ const Navigation = () => {
 
   return (
     <nav>
-      <NavLink onClick={handleHomeClick} style={{ padding: '10px', marginRight: '20px' }}>
+      <NavLink onClick={handleHomeClick} className="nav-button">
         Home
       </NavLink>
 
       {isAuthenticated ? (
         <>
-          <NavLink to="/contacts" style={{ padding: '10px', marginRight: '20px' }}>
+          <NavLink to="/contacts" className="nav-button">
             Contacts
           </NavLink>
-          <button onClick={handleLogout} style={{ padding: '10px', marginRight: '20px' }}>
+          <button onClick={handleLogout} className="nav-button">
             Logout
           </button>
         </>
       ) : (
         <>
-          <NavLink to="/register" style={{ padding: '10px', marginRight: '20px' }}>
+          <NavLink to="/register" className="nav-button">
             Register
           </NavLink>
-          <NavLink to="/login" style={{ padding: '10px', marginRight: '20px' }}>
+          <NavLink to="/login" className="nav-button">
             Login
           </NavLink>
         </>

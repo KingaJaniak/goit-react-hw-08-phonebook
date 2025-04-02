@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage';
 import ContactsPage from './pages/ContactsPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import './index.css';
+
 
 function App() {
   const { user, logout } = useAuth();  
@@ -22,14 +24,14 @@ function App() {
         {}
         {!user ? (
           <>
-            <button onClick={() => navigate("/")}>Home</button>
-            <button onClick={() => navigate("/register")}>Register</button>
-            <button onClick={() => navigate("/login")}>Login</button>
+            <button onClick={() => navigate("/")} className="nav-button">Home</button>
+            <button onClick={() => navigate("/register" )} className="nav-button">Register</button>
+            <button onClick={() => navigate("/login")} className="nav-button">Login</button>
           </>
         ) : (
           <>
-            <button onClick={() => navigate("/contacts")}>Contacts</button>
-            <button onClick={logout}>Logout</button>
+            <button onClick={() => navigate("/contacts")} className="nav-button">Contacts</button>
+            <button onClick={logout} className="logout-button">Logout</button>
           </>
         )}
       </div>

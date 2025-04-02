@@ -5,6 +5,7 @@ import ContactForm from '../components/ContactForm';
 import ContactList from '../components/ContactList';
 import Filter from '../components/Filter';
 
+
 const ContactsPage = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
@@ -25,9 +26,7 @@ const ContactsPage = () => {
       {status === 'loading' && <p>🔄 Loading...</p>}
       {error && <p style={{ color: 'red' }}>❌ {error}</p>}
 
-      <h2>Hello, {user?.name}! 🎉</h2>
-
-      <h1>Your Contacts</h1>
+      <h2 className="title-wrapper">Hello, {user?.name}! 🎉</h2>
 
     
       <ContactForm onAddContact={handleAddContact} />
@@ -35,7 +34,6 @@ const ContactsPage = () => {
       
       <Filter />
 
-      <h3>📞 Contacts list:</h3>
       {contacts && contacts.length > 0 ? (
         <ContactList contacts={contacts} />
       ) : (
