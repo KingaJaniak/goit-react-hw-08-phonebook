@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchContactsAsync } from '../redux/contactsSlice';
+import { fetchContactsAsync, addContactAsync } from '../redux/contactsSlice';
 import ContactForm from '../components/ContactForm';
 import ContactList from '../components/ContactList';
 import Filter from '../components/Filter';
@@ -8,20 +8,17 @@ import Filter from '../components/Filter';
 const ContactsPage = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
-  const { contacts, status, error } = useSelector((state) => state.contacts);
+  const { items: contacts, status, error } = useSelector((state) => state.contacts);
 
   useEffect(() => {
-    console.log('Fetching contacts...');
     if (token) {
       dispatch(fetchContactsAsync(token));
     }
   }, [dispatch, token]);
 
-  console.log('User:', user);
-  console.log('Contacts:', contacts);
-  console.log('Status:', status);
-  console.log('Error:', error);
-
+  const handleAddContact = (contact) => {
+    dispatch(addContactAsync(contact));
+  };
 
   return (
     <div>
@@ -31,12 +28,16 @@ const ContactsPage = () => {
       <h2>Hello, {user?.name}! 🎉</h2>
 
       <h1>Your Contacts</h1>
-      <ContactForm />
+
+    
+      <ContactForm onAddContact={handleAddContact} />
+
+      
       <Filter />
 
       <h3>📞 Contacts list:</h3>
       {contacts && contacts.length > 0 ? (
-        <ContactList />
+        <ContactList contacts={contacts} />
       ) : (
         <p>📭 No contacts.</p>
       )}
