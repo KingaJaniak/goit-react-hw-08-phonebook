@@ -1,25 +1,41 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import UserMenu from './UserMenu';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../redux/authSlice'; 
 
 const Navigation = () => {
   const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {
+    navigate('/');
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());  
+    navigate('/'); 
+  };
 
   return (
     <nav>
-      <NavLink to="/" style={{ padding: '10px', marginRight: '20px' }}>
+      {}
+      <NavLink onClick={handleHomeClick} style={{ padding: '10px', marginRight: '20px' }}>
         Home
       </NavLink>
 
+      {}
       {isAuthenticated ? (
         <>
           <NavLink to="/contacts" style={{ padding: '10px', marginRight: '20px' }}>
             Contacts
           </NavLink>
-          <UserMenu />
+          <button onClick={handleLogout} style={{ padding: '10px', marginRight: '20px' }}>
+            Logout
+          </button>
         </>
       ) : (
+        
         <>
           <NavLink to="/register" style={{ padding: '10px', marginRight: '20px' }}>
             Register

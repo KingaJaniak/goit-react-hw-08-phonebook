@@ -1,36 +1,48 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'; 
+import { useNavigate } from 'react-router-dom';
 import { registerUserAsync } from '../redux/authSlice';
+import { useAuth } from '../hooks/useAuth'; 
 
 const RegisterPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { login } = useAuth();  
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const { status} = useSelector((state) => state.auth);
+  const { status, error } = useSelector((state) => state.auth);  
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setSuccessMessage('');
-    setErrorMessage('');
-
     if (!name || !email || !password) {
-      setErrorMessage('❌ Please complete all fields!');
+      alert('Please fill in all fields!');
       return;
     }
 
     const result = await dispatch(registerUserAsync({ name, email, password }));
 
     if (registerUserAsync.fulfilled.match(result)) {
-      setSuccessMessage('✅ Successful registration! 🎉');
-    } else if (result.payload?.code === 11000) {
-      setErrorMessage('❌ Email already in use! Try logging in.');
+      alert('Registration successful!');
+      login({ email, password });  
+      navigate('/contacts'); 
     } else {
-      setErrorMessage('❌ Registration failed. Please try again.');
+      if (result?.payload?.code === 11000) {
+        alert('This email is already in use. Please use a different one.');
+      } else {
+        alert('Registration failed. Try again.');
+      }
     }
+  };
+
+  const renderErrorMessage = () => {
+    if (error) {
+      if (typeof error === 'object') {
+        return error.message || JSON.stringify(error);
+      }
+      return error;
+    }
+    return null;
   };
 
   return (
@@ -59,8 +71,7 @@ const RegisterPage = () => {
       </form>
 
       {status === 'loading' && <p>🔄 Registering...</p>}
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      {renderErrorMessage() && <p style={{ color: 'red' }}>{renderErrorMessage()}</p>}
     </div>
   );
 };

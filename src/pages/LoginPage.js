@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUserAsync } from '../redux/authSlice';
+import React, { useState, useSelector } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth'; 
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,13 +11,28 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const result = await dispatch(loginUserAsync({ email, password }));
-  
-    if (loginUserAsync.fulfilled.match(result)) {
+    if (!email || !password) {
+      alert('Please fill in all fields!');
+      return;
+    }
+
+    const result = await login({ email, password });
+    if (result) {
       navigate('/contacts');
+    } else {
+      alert('Login failed. Try again.');
     }
   };
-  
+
+  const renderErrorMessage = () => {
+    if (error) {
+      if (typeof error === 'object') {
+        return error.message || JSON.stringify(error);
+      }
+      return error;
+    }
+    return null;
+  };
 
   return (
     <div>
@@ -40,7 +54,7 @@ const LoginPage = () => {
       </form>
 
       {status === 'loading' && <p>🔄 Logging in...</p>}
-      {error && <p style={{ color: 'red' }}>❌ {error}</p>}
+      {renderErrorMessage() && <p style={{ color: 'red' }}>{renderErrorMessage()}</p>}
     </div>
   );
 };

@@ -1,43 +1,54 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUser, registerUser, fetchCurrentUser } from '../api'; 
+import axios from 'axios';
+
+const API_URL = 'https://connections-api.goit.global';
 
 export const loginUserAsync = createAsyncThunk(
   'auth/loginUser',
-  async (userCredentials, { rejectWithValue }) => {
-    const { email, password } = userCredentials;
-
+  async ({ email, password }, { rejectWithValue }) => {
     try {
-      const data = await loginUser(email, password);  
-      return data; 
+      const response = await axios.post(`${API_URL}/users/login`, { email, password });
+      return response.data; 
     } catch (error) {
-      return rejectWithValue(error.response.data); 
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
 export const registerUserAsync = createAsyncThunk(
   'auth/registerUser',
-  async (userCredentials, { rejectWithValue }) => {
+  async ({ name, email, password }, { rejectWithValue }) => {
     try {
-      const data = await registerUser(userCredentials.name, userCredentials.email, userCredentials.password);
-      return data;
+      const response = await axios.post(`${API_URL}/users/signup`, { name, email, password });
+      return response.data; 
     } catch (error) {
-      if (error.response?.data?.code === 11000) {
-        return rejectWithValue({ message: 'Ten e-mail jest już zajęty. Wybierz inny.' });
-      }
-      return rejectWithValue(error.response?.data || { message: 'Wystąpił nieoczekiwany błąd.' });
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
 
-export const fetchCurrentUserAsync = createAsyncThunk(
+export const logoutUserAsync = createAsyncThunk(
+  'auth/logoutUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_URL}/users/logout`);
+      return response.data;  
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const fetchCurrentUser = createAsyncThunk(
   'auth/fetchCurrentUser',
   async (token, { rejectWithValue }) => {
     try {
-      const data = await fetchCurrentUser(token); 
-      return data;
+      const response = await axios.get(`${API_URL}/users/current`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return response.data; 
     } catch (error) {
-      return rejectWithValue(error.response.data); 
+      return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
@@ -48,14 +59,18 @@ const authSlice = createSlice({
     user: null,
     token: null,
     isAuthenticated: false,
+    status: 'idle',
     error: null,
-    status: 'idle', 
   },
   reducers: {
-    logoutUser(state) {
+    setUser: (state, action) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+    },
+    clearUser: (state) => {
       state.user = null;
       state.token = null;
-      state.isAuthenticated = false; 
+      state.isAuthenticated = false;
     },
   },
   extraReducers: (builder) => {
@@ -67,12 +82,11 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.token = action.payload.token;
-        state.isAuthenticated = true; 
+        state.isAuthenticated = true;
       })
       .addCase(loginUserAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-        state.isAuthenticated = false;
       })
       .addCase(registerUserAsync.pending, (state) => {
         state.status = 'loading';
@@ -86,24 +100,35 @@ const authSlice = createSlice({
       .addCase(registerUserAsync.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-        state.isAuthenticated = false;
       })
-      .addCase(fetchCurrentUserAsync.pending, (state) => {
+      .addCase(logoutUserAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchCurrentUserAsync.fulfilled, (state, action) => {
+      .addCase(logoutUserAsync.fulfilled, (state) => {
+        state.status = 'succeeded';
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+      })
+      .addCase(logoutUserAsync.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
         state.isAuthenticated = true;
       })
-      .addCase(fetchCurrentUserAsync.rejected, (state, action) => {
+      .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-        state.isAuthenticated = false;
       });
   },
 });
 
-export const { logoutUser } = authSlice.actions;
+export const { setUser, clearUser } = authSlice.actions;
 
-export default authSlice.reducer;
+export default authSlice.reducer;  
