@@ -9,7 +9,7 @@ import Filter from '../components/Filter';
 const ContactsPage = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.auth);
-  const { items: contacts, status, error } = useSelector((state) => state.contacts);
+  const { items: contacts, status } = useSelector((state) => state.contacts);
 
   useEffect(() => {
     if (token) {
@@ -24,7 +24,6 @@ const ContactsPage = () => {
   return (
     <div>
       {status === 'loading' && <p>🔄 Loading...</p>}
-      {error && <p style={{ color: 'red' }}>❌ {error}</p>}
 
       <h2 className="title-wrapper">Hello, {user?.name}! 🎉</h2>
 
