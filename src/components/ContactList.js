@@ -14,7 +14,7 @@ const ContactList = () => {
   }, [status, dispatch]);
 
   const handleRemoveContact = id => {
-    dispatch(removeContactAsync(id)); 
+    dispatch(removeContactAsync(id));
   };
 
   const filteredContacts = items.filter(
@@ -22,9 +22,6 @@ const ContactList = () => {
       contact.name.toLowerCase().includes(filter.toLowerCase()) ||
       contact.phone.includes(filter)
   );
-
-  console.log("Contacts:", items);
-  console.log("Status:", status);
 
   if (status === 'loading') {
     return <div>Loading...</div>;
